@@ -2,6 +2,7 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
+source $CURRENT_DIR/debug.sh
 
 match_lookup_table=$(fingers_tmp)
 pane_output_temp=$(fingers_tmp)
@@ -13,7 +14,8 @@ export pane_output_temp
 
 function lookup_match() {
   local input=$1
-  echo "$(cat $match_lookup_table | grep -i "^$input:" | sed "s/^$input://i" | head -n 1)"
+  local input_case_insensitive="$input\\|$(echo "$input" | tr "A-Z" "a-z")"
+  echo "$(cat $match_lookup_table | grep -i "^$input:" | sed "s/^$input_case_insensitive://" | head -n 1)"
 }
 
 function get_stdin() {
